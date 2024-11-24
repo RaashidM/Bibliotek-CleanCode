@@ -31,10 +31,7 @@ namespace Infrastructure.Database
             };
         }
 
-        //public void AddBook(Book book)
-        //{
-        //    BooksFromDB.Add(book);
-        //}
+      
     };
 
   
