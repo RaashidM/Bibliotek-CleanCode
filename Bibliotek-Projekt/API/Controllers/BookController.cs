@@ -41,12 +41,12 @@ namespace API.Controllers
             }
         }
 
-        // GET api/<BookController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        //// GET api/<BookController>/5
+        //[HttpGet("{id}")]
+        //public string Get(int id)
+        //{
+        //    return "value";
+        //}
 
         // POST api/<BookController>
         [HttpPost]
