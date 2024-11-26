@@ -11,6 +11,7 @@ namespace Infrastructure.Database
     {
         public List<Book> BooksFromDB { get; private set;}
         public List<Author> AuthorsFromDB { get; private set;}
+        public List<User> UsersFromDB { get; private set;}
 
 
         public FakeDatabase()
@@ -28,6 +29,13 @@ namespace Infrastructure.Database
                 new Author(2, "Second Author"),
                 new Author(3, "Third Author")
 
+            };
+
+            UsersFromDB = new List<User>
+            {
+                new User{Id = Guid.NewGuid(), UserName ="User1"},
+                new User{Id = Guid.NewGuid(), UserName ="User2" },
+                new User{Id = Guid.NewGuid(), UserName ="User3"}
             };
         }
 

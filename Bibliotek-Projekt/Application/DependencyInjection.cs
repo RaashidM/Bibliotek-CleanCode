@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Users.Queries.Login.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
@@ -14,7 +15,9 @@ namespace Application
             var assembly = typeof(DependencyInjection).Assembly;
             services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(assembly));
 
-            //services.AddValidatorsFromAssembly(assembly);
+            services.AddScoped<TokenHelper>();
+
+
 
             return services;
         }
