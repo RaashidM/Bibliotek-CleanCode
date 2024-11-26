@@ -4,6 +4,7 @@ using Application.Authors.Commands.UpdateAuthor;
 using Application.Authors.Queries.GetAllAuthors;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -23,6 +24,7 @@ namespace API.Controllers
             _mediatr = mediatr;
         }
         // GET: api/<AuthorController>
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<Author>>> GetAllAuthors()
         {
