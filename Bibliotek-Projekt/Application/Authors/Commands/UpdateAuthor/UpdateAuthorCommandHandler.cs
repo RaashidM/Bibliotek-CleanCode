@@ -1,5 +1,5 @@
-﻿using Domain;
-using Infrastructure.Database;
+﻿using Application.Interfaces.RepositoryInterfaces;
+using Domain;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -11,25 +11,20 @@ namespace Application.Authors.Commands.UpdateAuthor
 {
     public class UpdateAuthorCommandHandler : IRequestHandler<UpdateAuthorCommand, Author>
     {
-        private readonly FakeDatabase _fakeDatabase;
+        private readonly IAuthorRepository _authorRepository;
 
-        public UpdateAuthorCommandHandler(FakeDatabase fakeDatabase)
+        public UpdateAuthorCommandHandler(IAuthorRepository authorRepository)
         {
-            _fakeDatabase = fakeDatabase;
+            _authorRepository = authorRepository;
         }
 
-        public Task<Author> Handle(UpdateAuthorCommand request, CancellationToken cancellationToken)
+        public async Task<Author> Handle(UpdateAuthorCommand request, CancellationToken cancellationToken)
         {
-            var authorToUpdate = _fakeDatabase.AuthorsFromDB.FirstOrDefault(a => a.Id == request.AuthorId);
+            var updatedAuthor = new Author(request.AuthorId, request.NewName);
 
-            if (authorToUpdate == null)
-            {
-                throw new KeyNotFoundException($"Author with ID {request.AuthorId} was not found.");
-            }
-
-            authorToUpdate.Name = request.NewName;
             
-            return Task.FromResult(authorToUpdate);
+            var result = await _authorRepository.UpdateAuthor(request.AuthorId, updatedAuthor);
+            return result;
         }
     }
 }

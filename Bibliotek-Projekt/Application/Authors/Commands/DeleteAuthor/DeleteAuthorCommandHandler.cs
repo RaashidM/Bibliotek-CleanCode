@@ -1,5 +1,5 @@
-﻿using Domain;
-using Infrastructure.Database;
+﻿using Application.Interfaces.RepositoryInterfaces;
+using Domain;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -9,26 +9,20 @@ using System.Threading.Tasks;
 
 namespace Application.Authors.Commands.DeleteAuthor
 {
-    public class DeleteAuthorCommandHandler : IRequestHandler<DeleteAuthorCommand, List<Author>>
+    public class DeleteAuthorCommandHandler : IRequestHandler<DeleteAuthorCommand, string>
     {
-        private readonly FakeDatabase _fakeDatabase;
+        private readonly IAuthorRepository _authorRepository;
 
-        public DeleteAuthorCommandHandler(FakeDatabase fakeDatabase)
+        public DeleteAuthorCommandHandler(IAuthorRepository authorRepository)
         {
-            _fakeDatabase = fakeDatabase;
+            _authorRepository = authorRepository;
         }
 
-        public Task<List<Author>> Handle(DeleteAuthorCommand request, CancellationToken cancellationToken)
+        public Task<string> Handle(DeleteAuthorCommand request, CancellationToken cancellationToken)
         {
-            var authorToRemove = _fakeDatabase.AuthorsFromDB.FirstOrDefault(a => a.Id == request.AuthorId);
-            if (authorToRemove == null)
-            {
-                return Task.FromResult(_fakeDatabase.AuthorsFromDB);
-            }
-
-            _fakeDatabase.AuthorsFromDB.Remove(authorToRemove);
-
-            return Task.FromResult(_fakeDatabase.AuthorsFromDB);
+           
+            var deletedAuthor = _authorRepository.DeleteAuthorById(request.AuthorId);
+            return Task.FromResult("Succesfully deleted");
         }
     }
 }

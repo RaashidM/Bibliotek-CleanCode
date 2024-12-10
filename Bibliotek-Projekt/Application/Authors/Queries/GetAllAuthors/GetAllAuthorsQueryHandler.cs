@@ -1,6 +1,6 @@
 ﻿using Application.Books.Queries.GetBooks;
+using Application.Interfaces.RepositoryInterfaces;
 using Domain;
-using Infrastructure.Database;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,16 +12,17 @@ namespace Application.Authors.Queries.GetAllAuthors
 {
     public class GetAllAuthorsQueryHandler : IRequestHandler<GetAllAuthorsQuery, List<Author>>
     {
-        private readonly FakeDatabase _fakeDatabase;
+        private readonly IAuthorRepository _authorRepository;
 
-        public GetAllAuthorsQueryHandler(FakeDatabase fakeDatabase)
+        public GetAllAuthorsQueryHandler(IAuthorRepository authorRepository)
         {
-            _fakeDatabase = fakeDatabase;
+            _authorRepository = authorRepository;
         }
 
-        public Task<List<Author>> Handle(GetAllAuthorsQuery request, CancellationToken cancellationToken)
+        public async Task<List<Author>> Handle(GetAllAuthorsQuery request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_fakeDatabase.AuthorsFromDB);
+            var authors = await _authorRepository.GetAllAuthors();
+            return authors;
         }
     }
 }
