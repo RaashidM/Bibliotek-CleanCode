@@ -18,10 +18,12 @@ namespace API.Controllers
     {
 
         private readonly IMediator _mediatr;
+       
 
         public AuthorController(IMediator mediatr)
         {
             _mediatr = mediatr;
+            
         }
         // GET: api/<AuthorController>
         [Authorize]
@@ -43,19 +45,31 @@ namespace API.Controllers
             }
         }
 
-        //// GET api/<AuthorController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
+        // GET api/<AuthorController>/5
+        [HttpGet("{id}")]
+        public string Get(int id)
+        {
+            return "value";
+        }
 
         // POST api/<AuthorController>
         [HttpPost]
-        public async void Post([FromBody] Author authorToAdd)
+        public async Task<IActionResult> Post([FromBody] Author authorToAdd)
         {
-            await _mediatr.Send(new CreateAuthorCommand(authorToAdd));
+            
+            try
+            {
+                var result = await _mediatr.Send(new CreateAuthorCommand(authorToAdd));
+               
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+               
+                return StatusCode(500, ex.Message);
+            }
         }
+
 
         // PUT api/<AuthorController>/5
         [HttpPut("{id}")]

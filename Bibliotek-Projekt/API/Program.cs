@@ -73,7 +73,9 @@ namespace API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddApplication().AddInfrastructure();
+            builder.Services.AddApplication();
+            builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DefaultConnection")!);
+
 
             var app = builder.Build();
 

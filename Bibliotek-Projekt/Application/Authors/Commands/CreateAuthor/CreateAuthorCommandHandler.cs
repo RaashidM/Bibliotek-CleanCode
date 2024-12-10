@@ -1,5 +1,6 @@
-﻿using Domain;
-using Infrastructure.Database;
+﻿using Application.Interfaces.RepositoryInterfaces;
+using Domain;
+
 using MediatR;
 using MediatR.Pipeline;
 using System;
@@ -10,19 +11,27 @@ using System.Threading.Tasks;
 
 namespace Application.Authors.Commands.CreateAuthor
 {
-    public class CreateAuthorCommandHandler : IRequestHandler<CreateAuthorCommand, List<Author>>
+    public class CreateAuthorCommandHandler : IRequestHandler<CreateAuthorCommand, Author>
     {
-        private readonly FakeDatabase _fakeDatabase;
+        private readonly IAuthorRepository _authorRepository;
 
-        public CreateAuthorCommandHandler(FakeDatabase fakeDatabase)
+        public CreateAuthorCommandHandler(IAuthorRepository authorRepository)
         {
-            _fakeDatabase = fakeDatabase;
+            _authorRepository = authorRepository;
         }
 
-        public Task<List<Author>> Handle(CreateAuthorCommand request, CancellationToken cancellationToken)
+        public async Task<Author> Handle(CreateAuthorCommand request, CancellationToken cancellationToken)
         {
-            _fakeDatabase.AuthorsFromDB.Add(request.NewAuthor);
-            return Task.FromResult(_fakeDatabase.AuthorsFromDB);
+            try
+            {
+                _authorRepository.AddAuthor(request.NewAuthor);
+                return await Task.FromResult(request.NewAuthor);
+            }
+            catch
+            {
+                throw new Exception("Author not added.");
+            }
+            
         }
     }
 }
