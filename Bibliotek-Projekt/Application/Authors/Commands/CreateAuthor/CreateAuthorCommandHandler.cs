@@ -22,15 +22,8 @@ namespace Application.Authors.Commands.CreateAuthor
 
         public async Task<Author> Handle(CreateAuthorCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                _authorRepository.AddAuthor(request.NewAuthor);
-                return await Task.FromResult(request.NewAuthor);
-            }
-            catch
-            {
-                throw new Exception("Author not added.");
-            }
+            var author = new Author(request.Name);
+            return await _authorRepository.AddAuthor(author);
             
         }
     }

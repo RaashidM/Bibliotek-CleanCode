@@ -1,27 +1,27 @@
-﻿//using Domain;
-//using Infrastructure.Database;
-//using MediatR;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using Application.Interfaces.RepositoryInterfaces;
+using Domain;
+using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace Application.Books.Commands.CreateBook
-//{
-//    public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand, List<Book>>
-//    {
-//        private readonly FakeDatabase _fakeDatabase;
+namespace Application.Books.Commands.CreateBook
+{
+    public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand, Book>
+    {
+        private readonly IBookRepository _bookRepository;
 
-//        public CreateBookCommandHandler(FakeDatabase fakeDatabase)
-//        {
-//            _fakeDatabase = fakeDatabase;
-//        }
+        public CreateBookCommandHandler(IBookRepository bookRepository)
+        {
+            _bookRepository = bookRepository;
+        }
 
-//        public Task<List<Book>> Handle(CreateBookCommand request, CancellationToken cancellationToken)
-//        {
-//            _fakeDatabase.BooksFromDB.Add(request.NewBook);
-//            return Task.FromResult(_fakeDatabase.BooksFromDB);
-//        }
-//    }
-//}
+        public async Task<Book> Handle(CreateBookCommand request, CancellationToken cancellationToken)
+        {
+            var book = new Book(request.Title, request.Description);
+            return await _bookRepository.AddBook(book);
+        }
+    }
+}

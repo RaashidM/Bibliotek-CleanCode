@@ -8,13 +8,15 @@ using System.Threading.Tasks;
 
 namespace Application.Books.Commands
 {
-    public class CreateBookCommand: IRequest<List<Book>>
+    public class CreateBookCommand: IRequest<Book>
     {
-        public CreateBookCommand(Book bookToAdd)
+        public CreateBookCommand(string title, string description)
         {
-            NewBook = bookToAdd;
+            Title = title;
+            Description = description;
         }
 
-        public Book NewBook { get; }
+        public string Title { get; set; }
+        public string Description { get; set; }
     }
 }

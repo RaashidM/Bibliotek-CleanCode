@@ -10,11 +10,11 @@ namespace Application.Authors.Commands.DeleteAuthor
 {
     public class DeleteAuthorCommand : IRequest<string>
     {
-        public DeleteAuthorCommand(int authorId)
+        public DeleteAuthorCommand(Guid authorId)
         {
             AuthorId = authorId;
         }
 
-        public int AuthorId { get; }
+        public Guid AuthorId { get; }
     }
 }

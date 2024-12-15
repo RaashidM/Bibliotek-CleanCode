@@ -1,28 +1,29 @@
-﻿//using Application.Books.Queries.GetBooks;
-//using Domain;
-//using Infrastructure.Database;
-//using MediatR;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Runtime.CompilerServices;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using Application.Books.Queries.GetBooks;
+using Application.Interfaces.RepositoryInterfaces;
+using Domain;
+using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace Application.Books.Queries.GetBook
-//{
-//    public class GetAllBooksQueryHandler : IRequestHandler<GetAllBooksQuery, List<Book>>
-//    {
-//        private readonly FakeDatabase _fakeDatabase;
+namespace Application.Books.Queries.GetBook
+{
+    public class GetAllBooksQueryHandler : IRequestHandler<GetAllBooksQuery, List<Book>>
+    {
+        private readonly IBookRepository _bookRepository;
 
-//        public GetAllBooksQueryHandler(FakeDatabase fakeDatabase)
-//        {
-//            _fakeDatabase = fakeDatabase;
-//        }
+        public GetAllBooksQueryHandler(IBookRepository bookRepository)
+        {
+            _bookRepository = bookRepository;
+        }
 
-//        public Task<List<Book>> Handle(GetAllBooksQuery request, CancellationToken cancellationToken)
-//        {
-//            return Task.FromResult(_fakeDatabase.BooksFromDB);
-//        }
-//    }
-//}
+        public async Task<List<Book>> Handle(GetAllBooksQuery request, CancellationToken cancellationToken)
+        {
+            var books = await _bookRepository.GetAllBooks();
+            return books;
+        }
+    }
+}

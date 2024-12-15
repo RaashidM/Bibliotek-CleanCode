@@ -2,6 +2,7 @@
 using Application.Authors.Commands.DeleteAuthor;
 using Application.Authors.Commands.UpdateAuthor;
 using Application.Authors.Queries.GetAllAuthors;
+using Application.Authors.Queries.GetAuthorById;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -47,19 +48,28 @@ namespace API.Controllers
 
         // GET api/<AuthorController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Author>> Get(Guid id)
         {
-            return "value";
+            try
+            {
+                var authors = await _mediatr.Send(new GetAuthorByIdQuery(id));
+
+                return Ok(authors);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         // POST api/<AuthorController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Author authorToAdd)
+        public async Task<IActionResult> Post([FromBody] CreateAuthorCommand addCommand)
         {
             
             try
             {
-                var result = await _mediatr.Send(new CreateAuthorCommand(authorToAdd));
+                var result = await _mediatr.Send(addCommand);
                
                 return Ok(result);
             }
@@ -73,11 +83,11 @@ namespace API.Controllers
 
         // PUT api/<AuthorController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<Author>> Put(int id, [FromBody] UpdateAuthorCommand updateAuthorCommand)
+        public async Task<ActionResult<Author>> Put(Guid id, [FromBody] UpdateAuthorCommand updateAuthorCommand)
         {
             if (id != updateAuthorCommand.AuthorId)
             {
-                return BadRequest("The author ID in the URL and the body do not match.");
+                return BadRequest("The author ID do not match.");
             }
 
             try
@@ -101,7 +111,7 @@ namespace API.Controllers
 
         // DELETE api/<AuthorController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
             await _mediatr.Send(new DeleteAuthorCommand(id));
             return NoContent();

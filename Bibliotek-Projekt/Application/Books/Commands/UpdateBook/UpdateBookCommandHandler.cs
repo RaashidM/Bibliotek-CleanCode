@@ -1,36 +1,29 @@
-﻿//using Domain;
-//using Infrastructure.Database;
-//using MediatR;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using Application.Interfaces.RepositoryInterfaces;
+using Domain;
+using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace Application.Books.Commands.UpdateBook
-//{
-//    public class UpdateBookCommandHandler : IRequestHandler<UpdateBookCommand, Book>
-//    {
-//        private readonly FakeDatabase _fakeDatabase;
+namespace Application.Books.Commands.UpdateBook
+{
+    public class UpdateBookCommandHandler : IRequestHandler<UpdateBookCommand, Book>
+    {
+        private readonly IBookRepository _bookRepository;
 
-//        public UpdateBookCommandHandler(FakeDatabase fakeDatabase)
-//        {
-//            _fakeDatabase = fakeDatabase;
-//        }
+        public UpdateBookCommandHandler(IBookRepository bookRepository)
+        {
+            _bookRepository = bookRepository;
+        }
 
-//        public Task<Book> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
-//        {
-//             var BookToUpdate = _fakeDatabase.BooksFromDB.FirstOrDefault(b => b.Id == request.BookId);
+        public async Task<Book> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
+        {
+            var updatedBook = new Book(request.NewTitle, request.NewDescription);
 
-//            if (BookToUpdate == null)
-//            {
-//                throw new KeyNotFoundException($"Book with ID {request.BookId} was not found.");
-//            }
-
-//            BookToUpdate.Title = request.NewTitle;
-//            BookToUpdate.Description = request.NewDescription;
-
-//            return Task.FromResult(BookToUpdate);
-//        }
-//    }
-//}
+            var result = await _bookRepository.UpdateBook(request.BookId, updatedBook);
+            return result;
+        }
+    }
+}

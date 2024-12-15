@@ -10,10 +10,10 @@ namespace Application.Authors.Commands.UpdateAuthor
 {
     public class UpdateAuthorCommand : IRequest<Author>
     {
-        public int AuthorId {  get; }
+        public Guid AuthorId {  get; }
         public string NewName {  get; }
 
-        public UpdateAuthorCommand(int authorId, string newName)
+        public UpdateAuthorCommand(Guid authorId, string newName)
         {
             AuthorId = authorId;
             NewName = newName;

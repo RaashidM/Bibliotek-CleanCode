@@ -10,11 +10,11 @@ namespace Application.Books.Commands.UpdateBook
 {
     public class UpdateBookCommand :IRequest<Book>
     {
-        public int BookId { get; }
+        public Guid BookId { get; }
         public string NewTitle { get; }
         public string NewDescription { get; }
 
-        public UpdateBookCommand(int bookId, string newTitle, string newDescription)
+        public UpdateBookCommand(Guid bookId, string newTitle, string newDescription)
         {
             BookId = bookId;
             NewTitle = newTitle;

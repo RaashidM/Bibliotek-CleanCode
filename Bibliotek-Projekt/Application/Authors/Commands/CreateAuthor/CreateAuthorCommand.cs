@@ -10,11 +10,12 @@ namespace Application.Authors.Commands.CreateAuthor
 {
     public class CreateAuthorCommand : IRequest<Author>
     {
-        public CreateAuthorCommand(Author authorToAdd)
+        public CreateAuthorCommand(string name)
         {
-            NewAuthor = authorToAdd;
+            Name = name;
         }
+        public string Name { get; set; }
 
-        public Author NewAuthor { get; }
+        
     }
 }
