@@ -10,9 +10,9 @@ namespace Application.Authors.Queries.GetAuthorById
 {
     public class GetAuthorByIdQuery : IRequest<Author>
     {
-        public int AuthorId { get; }
+        public Guid AuthorId { get; }
 
-        public GetAuthorByIdQuery(int authorId)
+        public GetAuthorByIdQuery(Guid authorId)
         {
             AuthorId = authorId;
         }

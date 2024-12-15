@@ -6,17 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Books.Commands.DeleteBook
+namespace Application.Books.Queries.GetBookById
 {
-    public class DeleteBookCommand : IRequest<string>
+    public class GetBookByIdQuery : IRequest<Book>
     {
-        public DeleteBookCommand(Guid bookId)
-        {
-            BookId = bookId; 
-        }
-
         public Guid BookId { get; }
 
+        public GetBookByIdQuery(Guid bookId)
+        {
+            BookId = bookId;
+        }
     }
-
 }

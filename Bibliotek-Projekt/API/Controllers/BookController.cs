@@ -1,6 +1,7 @@
 ﻿using Application.Books.Commands;
 using Application.Books.Commands.DeleteBook;
 using Application.Books.Commands.UpdateBook;
+using Application.Books.Queries.GetBookById;
 using Application.Books.Queries.GetBooks;
 using Domain;
 using MediatR;
@@ -43,27 +44,43 @@ namespace API.Controllers
             }
         }
 
-        //// GET api/<BookController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
+        // GET api/<BookController>/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Book>> Get(Guid id)
+        {
+            try
+            {
+                var books = await _mediatr.Send(new GetBookByIdQuery(id));
+                return Ok(books);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         // POST api/<BookController>
         [HttpPost]
-        public async void Post([FromBody] Book bookToAdd)
+        public async Task<IActionResult> Post([FromBody] CreateBookCommand bookToAdd)
         {
-            await _mediatr.Send(new CreateBookCommand(bookToAdd));
+            try
+            {
+                var result = await _mediatr.Send(bookToAdd);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         // PUT api/<BookController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<Book>> Put(int id, [FromBody] UpdateBookCommand updateBookCommand)
+        public async Task<ActionResult<Book>> Put(Guid id, [FromBody] UpdateBookCommand updateBookCommand)
         {
             if (id != updateBookCommand.BookId)
             {
-                return BadRequest("The book ID in the URL and the body do not match.");
+                return BadRequest("The book ID do not match.");
             }
 
             try
@@ -86,7 +103,7 @@ namespace API.Controllers
 
         // DELETE api/<BookController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
             await _mediatr.Send(new DeleteBookCommand(id));
             return NoContent();

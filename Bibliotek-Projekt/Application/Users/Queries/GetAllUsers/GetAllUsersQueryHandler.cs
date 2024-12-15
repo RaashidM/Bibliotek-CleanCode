@@ -1,27 +1,26 @@
-﻿//using Domain;
-//using Infrastructure.Database;
-//using MediatR;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using Application.Interfaces.RepositoryInterfaces;
+using Domain;
+using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace Application.Users.Queries.GetAllUsers
-//{
-//    internal sealed class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, List<User>>
-//    {
-//        private readonly FakeDatabase _fakeDatabase;
+namespace Application.Users.Queries.GetAllUsers
+{
+    internal sealed class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, List<User>>
+    {
+        private readonly IUserRepository _userRepository;
 
-//        public GetAllUsersQueryHandler(FakeDatabase fakeDatabase)
-//        {
-//            _fakeDatabase = fakeDatabase;
-//        }
+        public GetAllUsersQueryHandler(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
 
-//        public Task<List<User>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
-//        {
-//            List<User> allUsersFromFakeDatabase = _fakeDatabase.UsersFromDB;
-//            return Task.FromResult(allUsersFromFakeDatabase);
-//        }
-//    }
-//}
+        public async Task<List<User>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
+        {
+            return await _userRepository.GetAllUsers();
+        }
+    }
+}

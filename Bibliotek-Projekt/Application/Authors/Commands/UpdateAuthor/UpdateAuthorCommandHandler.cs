@@ -20,9 +20,9 @@ namespace Application.Authors.Commands.UpdateAuthor
 
         public async Task<Author> Handle(UpdateAuthorCommand request, CancellationToken cancellationToken)
         {
-            var updatedAuthor = new Author(request.AuthorId, request.NewName);
+            var updatedAuthor = new Author( request.NewName);
 
-            
+
             var result = await _authorRepository.UpdateAuthor(request.AuthorId, updatedAuthor);
             return result;
         }

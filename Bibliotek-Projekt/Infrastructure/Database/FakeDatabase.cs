@@ -18,16 +18,16 @@ namespace Infrastructure.Database
         {
             BooksFromDB = new List<Book>
             {
-                new Book(1, "First Book", "First Description"),
-                new Book(2, "Second Book", "Second Description"),
-                new Book(3, "Third Book", "Third Description")
+                new Book("First Book", "First Description"),
+                new Book("Second Book", "Second Description"),
+                new Book("Third Book", "Third Description")
             };
 
             AuthorsFromDB = new List<Author>
             {
-                new Author(1, "First Author"),
-                new Author(2, "Second Author"),
-                new Author(3, "Third Author")
+                new Author("First Author"),
+                new Author("Second Author"),
+                new Author("Third Author")
 
             };
 

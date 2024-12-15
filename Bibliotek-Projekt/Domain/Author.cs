@@ -8,15 +8,16 @@ namespace Domain
 {
     public class Author
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         public string Name { get; set; }
 
-        public Author(int id, string name)
+        public Author(string name)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             Name = name;
         }
 
+        
     }
 }
