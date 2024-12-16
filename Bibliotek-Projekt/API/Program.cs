@@ -1,15 +1,21 @@
 using Application;
 using Infrastructure;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using FluentValidation.AspNetCore;
+using Application.Validators;
+using Application.Books.Commands.CreateBook;
 namespace API
 {
     public class Program
     {
         public static void Main(string[] args)
         {
+
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -69,7 +75,9 @@ namespace API
             });
 
             builder.Services.AddControllers();
+           
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
