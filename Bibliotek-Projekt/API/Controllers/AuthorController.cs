@@ -4,6 +4,7 @@ using Application.Authors.Commands.UpdateAuthor;
 using Application.Authors.Queries.GetAllAuthors;
 using Application.Authors.Queries.GetAuthorById;
 using Domain;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,16 +20,22 @@ namespace API.Controllers
     {
 
         private readonly IMediator _mediatr;
-       
+        private readonly IValidator<CreateAuthorCommand> _createAuthorValidator;
+        private readonly IValidator<UpdateAuthorCommand> _updateAuthorValidator;
 
-        public AuthorController(IMediator mediatr)
+
+        public AuthorController(IMediator mediatr,
+             IValidator<CreateAuthorCommand> createAuthorValidator,
+             IValidator<UpdateAuthorCommand> updateAuthorValidator)
         {
             _mediatr = mediatr;
+            _createAuthorValidator = createAuthorValidator;
+            _updateAuthorValidator = updateAuthorValidator;
             
         }
         // GET: api/<AuthorController>
         [Authorize]
-        [HttpGet]
+        [HttpGet("GetAllAuthors")]
         public async Task<ActionResult<List<Author>>> GetAllAuthors()
         {
             try
@@ -47,14 +54,21 @@ namespace API.Controllers
         }
 
         // GET api/<AuthorController>/5
-        [HttpGet("{id}")]
+        [HttpGet("GetAuthorById")]
         public async Task<ActionResult<Author>> Get(Guid id)
         {
             try
             {
-                var authors = await _mediatr.Send(new GetAuthorByIdQuery(id));
+                var operationResult = await _mediatr.Send(new GetAuthorByIdQuery(id));
 
-                return Ok(authors);
+                if (operationResult.IsSuccesfull)
+                {
+                    return Ok(new {message = operationResult.Message, data = operationResult.Data});
+                }
+                else
+                {
+                    return BadRequest(new { message = operationResult.Message, errors = operationResult.ErrorMessage});
+                }
             }
             catch (Exception ex)
             {
@@ -63,26 +77,29 @@ namespace API.Controllers
         }
 
         // POST api/<AuthorController>
-        [HttpPost]
+        [HttpPost("AddAuthor")]
         public async Task<IActionResult> Post([FromBody] CreateAuthorCommand addCommand)
         {
-            
+            var validationResult = await _createAuthorValidator.ValidateAsync(addCommand);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
             try
             {
                 var result = await _mediatr.Send(addCommand);
-               
                 return Ok(result);
             }
             catch (Exception ex)
             {
-               
                 return StatusCode(500, ex.Message);
             }
         }
 
 
         // PUT api/<AuthorController>/5
-        [HttpPut("{id}")]
+        [HttpPut("UpdateAuthor")]
         public async Task<ActionResult<Author>> Put(Guid id, [FromBody] UpdateAuthorCommand updateAuthorCommand)
         {
             if (id != updateAuthorCommand.AuthorId)
@@ -90,27 +107,31 @@ namespace API.Controllers
                 return BadRequest("The author ID do not match.");
             }
 
+            var validationResult = await _updateAuthorValidator.ValidateAsync(updateAuthorCommand);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
             try
             {
                 var updateAuthor = await _mediatr.Send(updateAuthorCommand);
-
                 return Ok(updateAuthor);
             }
-
             catch (KeyNotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
-
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
+    
 
 
         // DELETE api/<AuthorController>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteAuthor")]
         public async Task<ActionResult> Delete(Guid id)
         {
             await _mediatr.Send(new DeleteAuthorCommand(id));
